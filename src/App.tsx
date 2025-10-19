@@ -1,46 +1,50 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import OnHold from "./pages/OnHold";
-import ItemVoando from "./pages/ItemVoando";
-import Missing from "./pages/Missing";
-import Avarias from "./pages/Avarias";
-import NaoCoube from "./pages/NaoCoube";
-import Ofensores from "./pages/Ofensores";
-import Volumosos from "./pages/Volumosos";
-import Backlog from "./pages/Backlog";
-import NotFound from "./pages/NotFound";
+// src/App.tsx
 
-const queryClient = new QueryClient();
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from '@/components/ui/toaster';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import DashboardLayout from '@/components/DashboardLayout';
+import Settings from '@/pages/Settings';
 
-const App = () => {
-  console.log("App rendering...");
-  
+// Importar suas páginas existentes do dashboard
+// Ajuste os imports conforme a estrutura real do seu projeto
+import Dashboard from '@/pages/Dashboard'; // ou o nome da sua página principal
+// Adicione outras páginas se necessário
+
+function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/on-hold" element={<OnHold />} />
-            <Route path="/item-voando" element={<ItemVoando />} />
-            <Route path="/missing" element={<Missing />} />
-            <Route path="/avarias" element={<Avarias />} />
-            <Route path="/nao-coube" element={<NaoCoube />} />
-            <Route path="/ofensores" element={<Ofensores />} />
-            <Route path="/volumosos" element={<Volumosos />} />
-            <Route path="/backlog" element={<Backlog />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <Routes>
+        {/* Rota de Configuração (pública - não protegida) */}
+        <Route path="/settings" element={<Settings />} />
+
+        {/* Rotas do Dashboard (protegidas) */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          {/* Página principal do dashboard */}
+          <Route index element={<Dashboard />} />
+          
+          {/* Adicione outras rotas aninhadas aqui se necessário */}
+          {/* Exemplo:
+          <Route path="comercial" element={<Comercial />} />
+          <Route path="backlog" element={<Backlog />} />
+          */}
+        </Route>
+
+        {/* Rota 404 - Redireciona para home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
+      {/* Toast notifications */}
+      <Toaster />
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
