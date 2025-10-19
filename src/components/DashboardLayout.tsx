@@ -7,6 +7,7 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  console.log("DashboardLayout rendering...");
   const [dateFilter, setDateFilter] = useState<Date>(new Date());
   const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "year">("day");
 
